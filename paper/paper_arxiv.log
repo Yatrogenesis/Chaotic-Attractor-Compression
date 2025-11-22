@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  22 NOV 2025 05:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  22 NOV 2025 07:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -352,8 +352,7 @@ ef
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count304
 \l__pdf_internal_box=\box56
-)
-No file paper_arxiv.aux.
+) (./paper_arxiv.aux)
 \openout1 = `paper_arxiv.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
@@ -374,6 +373,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
+
 (/usr/local/texlive/2025basic/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count305
@@ -407,6 +407,8 @@ Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/local/texlive/2025basic/texmf-dist/tex/latex/graphics/mathcolor.ltx))
 Package hyperref Info: Link coloring ON on input line 44.
+
+(./paper_arxiv.out) (./paper_arxiv.out)
 \@outlinefile=\write3
 \openout3 = `paper_arxiv.out'.
 
@@ -456,21 +458,12 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 47.
 (/usr/local/texlive/2025basic/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-Package natbib Warning: Citation `devlin2019bert' on page 1 undefined on input 
-line 58.
-
-
-Overfull \hbox (3.0046pt too wide) in paragraph at lines 58--59
-\T1/cmr/m/n/10.95 tors, while larger mod-els (GPT-3, PaLM) gen-er-ate em-bed-di
-ngs with di-men-sions $\OML/cmm/m/it/10.95 d \OMS/cmsy/m/n/10.95 2 \OT1/cmr/m/n
-/10.95 [1024\OML/cmm/m/it/10.95 ; \OT1/cmr/m/n/10.95 12288]$\T1/cmr/m/n/10.95 .
-
+Overfull \hbox (18.12746pt too wide) in paragraph at lines 58--59
+\T1/cmr/m/n/10.95 vec-tors, while larger mod-els (GPT-3, PaLM) gen-er-ate em-be
+d-dings with di-men-sions $\OML/cmm/m/it/10.95 d \OMS/cmsy/m/n/10.95 2 \OT1/cmr
+/m/n/10.95 [1024\OML/cmm/m/it/10.95 ; \OT1/cmr/m/n/10.95 12288]$\T1/cmr/m/n/10.
+95 .
  []
-
-
-Package natbib Warning: Citation `jegou2011product' on page 1 undefined on inpu
-t line 70.
 
 
 
@@ -480,37 +473,10 @@ t line 70.
 r/local/texlive/2025basic/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
 
 
-Package natbib Warning: Citation `shannon1948mathematical' on page 2 undefined 
-on input line 110.
-
-
-Package natbib Warning: Citation `kolmogorov1965three' on page 2 undefined on i
-nput line 120.
-
-
-
 [2]
-
-Package natbib Warning: Citation `grassberger1983measuring' on page 3 undefined
- on input line 146.
-
-
-Package natbib Warning: Citation `eckmann1985ergodic' on page 3 undefined on in
-put line 174.
-
-
-Package natbib Warning: Citation `wolf1985determining' on page 3 undefined on i
-nput line 187.
-
-
 
 [3{/usr/local/texlive/2025basic/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts
 1.enc}]
-
-Package natbib Warning: Citation `takens1981detecting' on page 4 undefined on i
-nput line 204.
-
-
 
 [4]
 
@@ -531,33 +497,9 @@ Overfull \hbox (12.48726pt too wide) in paragraph at lines 568--569
 66-261x com-pres-sion, val-i-dat-ing low-dimensional
  []
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.579 ...& \textbf{N} & \textbf{d} & \textbf{sim}_
-                                                  c & \textbf{$D_2$} & \text...
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.579 ...textbf{N} & \textbf{d} & \textbf{sim}_c &
-                                                   \textbf{$D_2$} & \textbf{...
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
 
 
 [9]
-
-Package natbib Warning: Citation `duda2014asymmetric' on page 10 undefined on i
-nput line 662.
-
-
 
 [10]
 
@@ -569,28 +511,9 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 [12]
 
-Package natbib Warning: Citation `jegou2011product' on page 13 undefined on inp
-ut line 827.
-
-
-
 [13]
 
-Package natbib Warning: Citation `mcinnes2018umap' on page 14 undefined on inpu
-t line 871.
-
-
-Package natbib Warning: Citation `jegou2011product' on page 14 undefined on inp
-ut line 894.
-
-
-
 [14]
-
-Package natbib Warning: Citation `balle2018variational' on page 15 undefined on
- input line 913.
-
-
 
 [15]
 
@@ -603,59 +526,23 @@ s-[]ai / tree / main / experiments / compression$[][]
 
 
 [17]
-Underfull \hbox (badness 1163) in paragraph at lines 1137--1141
-[]\T1/cmr/m/n/10.95 McInnes, L., Healy, J., & Melville, J. (2018). UMAP: Uni-fo
-rm Man-i-fold Ap-prox-i-ma-
- []
 
-
-Package natbib Warning: There were undefined citations.
-
-
-
-[18] (./paper_arxiv.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-
-! Package natbib Error: Bibliography not compatible with author-year citations.
-
-(natbib)                Press <return> to continue in numerical citation style.
-
-
-See the natbib package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.105 ...and\NAT@force@numbers{}\NAT@force@numbers
-                                                  
-Check the bibliography entries for non-compliant syntax,
-or select author-year BibTeX style, e.g. plainnat
-
-)
+[18] (./paper_arxiv.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-Package rerunfilecheck Warning: File `paper_arxiv.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `paper_arxiv.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  13FF6E889A14BC6E1F950072AA2CCC0A;12960.
+Package rerunfilecheck Info: File `paper_arxiv.out' has not changed.
+(rerunfilecheck)             Checksum: 13FF6E889A14BC6E1F950072AA2CCC0A;12960.
  ) 
 Here is how much of TeX's memory you used:
- 11317 strings out of 474662
- 170839 string characters out of 5751110
- 572305 words of memory out of 5000000
- 33998 multiletter control sequences out of 15000+600000
- 578555 words of font info for 87 fonts, out of 8000000 for 9000
+ 11404 strings out of 474662
+ 172368 string characters out of 5751110
+ 572631 words of memory out of 5000000
+ 34077 multiletter control sequences out of 15000+600000
+ 580112 words of font info for 89 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 75i,10n,79p,1200b,591s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1200b,591s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx1
 0.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mex10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/
@@ -684,10 +571,10 @@ r/local/texlive/2025basic/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb><
 b></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/cm-super/sftt1000
 .pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/cm-super/sftt1
 095.pfb>
-Output written on paper_arxiv.pdf (18 pages, 471427 bytes).
+Output written on paper_arxiv.pdf (18 pages, 477441 bytes).
 PDF statistics:
- 467 PDF objects out of 1000 (max. 8388607)
- 390 compressed objects within 4 object streams
+ 705 PDF objects out of 1000 (max. 8388607)
+ 625 compressed objects within 7 object streams
  210 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 593 words of extra memory for PDF output out of 10000 (max. 10000000)
 

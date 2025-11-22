@@ -10,6 +10,8 @@ use methods::*;
 use ndarray::{Array1, Array2};
 use serde::{Serialize, Deserialize};
 use std::time::Instant;
+use std::fs::File;
+use std::io::BufReader;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct ExperimentResults {
@@ -20,22 +22,53 @@ struct ExperimentResults {
     accuracy_loss: f64,
 }
 
+#[derive(Debug, Deserialize)]
+struct BertEmbeddingDataset {
+    name: String,
+    dimension: usize,
+    count: usize,
+    consecutive_similarity: f64,
+    vectors: Vec<Vec<f32>>,
+}
+
+fn load_bert_embeddings(path: &str) -> Result<BertEmbeddingDataset, Box<dyn std::error::Error>> {
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+    let dataset: BertEmbeddingDataset = serde_json::from_reader(reader)?;
+    Ok(dataset)
+}
+
 fn main() {
-    println!("🔬 Experimento de Compresión de Vectores - CORREGIDO");
+    println!("🔬 Experimento de Compresión de Vectores - REAL BERT EMBEDDINGS");
     println!("Autor: Francisco Molina Burgos (ORCID: 0009-0008-6093-8267)");
-    println!("Fecha: 2025-11-21");
-    println!("Versión: 2.0 - Con similitud consecutiva\n");
+    println!("Fecha: 2025-11-22");
+    println!("Versión: 3.0 - Con embeddings REALES de BERT\n");
 
-    let n_vectors = 1000;
-    let dim = 768;
-
-    // Probar 4 TIPOS DE DATASETS
-    let datasets: Vec<(&str, Vec<Vec<f32>>)> = vec![
-        ("Random Similar (baseline)", generate_similar_vectors(n_vectors, dim, 0.8)),
-        ("Conversational Drift ⭐ (drift 5%)", generate_conversational_drift(n_vectors, dim, 0.05)),
-        ("Temporal Smoothing (alpha 0.9)", generate_temporal_smoothing(n_vectors, dim, 0.9)),
-        ("Clustered Topics (100 per cluster)", generate_clustered_topics(n_vectors, dim, 100)),
+    // LOAD REAL BERT EMBEDDINGS FROM JSON
+    let bert_paths = vec![
+        "data/real_embeddings/wikipedia_2k.json",
+        "data/real_embeddings/news_temporal_2k.json",
     ];
+
+    let mut datasets: Vec<(String, Vec<Vec<f32>>)> = Vec::new();
+
+    for path in bert_paths {
+        match load_bert_embeddings(path) {
+            Ok(bert_data) => {
+                println!("✅ Loaded: {} ({} vectors, {}D, sim={:.4})",
+                    bert_data.name, bert_data.count, bert_data.dimension, bert_data.consecutive_similarity);
+                datasets.push((format!("🔬 REAL BERT: {}", bert_data.name), bert_data.vectors));
+            }
+            Err(e) => {
+                eprintln!("⚠️ Failed to load {}: {}", path, e);
+            }
+        }
+    }
+
+    // Add synthetic datasets for comparison
+    let n_vectors = 2000;
+    let dim = 768;
+    datasets.push(("Synthetic: Clustered Topics (baseline)".to_string(), generate_clustered_topics(n_vectors, dim, 100)));
 
     let mut all_results = Vec::new();
 

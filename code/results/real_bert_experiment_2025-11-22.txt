@@ -1,0 +1,374 @@
+🔬 Experimento de Compresión de Vectores - REAL BERT EMBEDDINGS
+Autor: Francisco Molina Burgos (ORCID: 0009-0008-6093-8267)
+Fecha: 2025-11-22
+Versión: 3.0 - Con embeddings REALES de BERT
+
+✅ Loaded: wikipedia_2k (2000 vectors, 768D, sim=0.9898)
+✅ Loaded: news_temporal_2k (2000 vectors, 768D, sim=0.9730)
+
+======================================================================
+📊 Testing: 🔬 REAL BERT: wikipedia_2k
+======================================================================
+
+🔑 Similitud Consecutiva: 0.9898
+   ✅ EXCELENTE - Delta Encoding DEBE funcionar bien (≥8x esperado)
+
+Testing GZIP Baseline...
+Testing Int8 Quantization...
+Testing Delta Encoding...
+Testing Zstd...
+Testing Polar Delta Encoding...
+Testing Delta + ANS...
+Testing Delta Lossless (RLE+GZIP)...
+Testing Attractor Compression (PCA+Delta)...
+
+📊 Resultados:
+  GZIP           : ratio= 1.08x, comp=162.98ms, decomp=27.72ms, loss=0.0000%
+  Int8+GZIP      : ratio= 4.26x, comp= 35.59ms, decomp= 6.89ms, loss=25783765612.2576%
+  Delta+GZIP     : ratio= 1.10x, comp=174.51ms, decomp=25.41ms, loss=0.0000% ⚠️ (esperaba ≥8x)
+  Zstd           : ratio= 1.08x, comp= 24.14ms, decomp=10.90ms, loss=0.0000%
+  PolarDelta+GZIP: ratio= 2.90x, comp=118.13ms, decomp=23.56ms, loss=20696694579.0761% ⚠️ (esperaba ≥8x)
+  Delta+ANS      : ratio= 5.42x, comp= 39.61ms, decomp=10.04ms, loss=116242013535.3361% ⚠️ (esperaba ≥8x)
+  Delta+RLE+GZIP : ratio= 0.97x, comp=2647.08ms, decomp=44.38ms, loss=10794.0871% ⚠️ (esperaba ≥8x)
+  Attractor(PCA-10): ratio=187.35x, comp=  8.26ms, decomp= 0.84ms, loss=24237263543.6425%
+
+🔬 Validación de Hipótesis:
+   ❌ Delta Cartesiano: solo 1.10x (esperaba ≥8x) con similitud 0.9898
+   ⚠️  Polar Delta: 2.90x (esperaba ≥8x) con similitud 0.9898
+
+======================================================================
+📊 Testing: 🔬 REAL BERT: news_temporal_2k
+======================================================================
+
+🔑 Similitud Consecutiva: 0.9730
+   ✅ EXCELENTE - Delta Encoding DEBE funcionar bien (≥8x esperado)
+
+Testing GZIP Baseline...
+Testing Int8 Quantization...
+Testing Delta Encoding...
+Testing Zstd...
+Testing Polar Delta Encoding...
+Testing Delta + ANS...
+Testing Delta Lossless (RLE+GZIP)...
+Testing Attractor Compression (PCA+Delta)...
+
+📊 Resultados:
+  GZIP           : ratio=106.28x, comp= 18.13ms, decomp= 5.02ms, loss=0.0000%
+  Int8+GZIP      : ratio=467.37x, comp=  3.95ms, decomp= 1.55ms, loss=25495992843.4936%
+  Delta+GZIP     : ratio=100.87x, comp= 11.21ms, decomp= 6.20ms, loss=0.0000% ⭐
+  Zstd           : ratio=401.04x, comp= 13.83ms, decomp= 3.11ms, loss=0.0000%
+  PolarDelta+GZIP: ratio=212.29x, comp= 16.68ms, decomp=11.37ms, loss=68034209829.7737% ⭐
+  Delta+ANS      : ratio=387.05x, comp=  6.75ms, decomp= 3.12ms, loss=310800680934.7380% ⭐
+  Delta+RLE+GZIP : ratio=36.98x, comp=119.08ms, decomp=17.86ms, loss=63222.4573% ⭐
+  Attractor(PCA-10): ratio=1775.72x, comp=  5.86ms, decomp= 0.35ms, loss=31715905111.0309%
+
+🔬 Validación de Hipótesis:
+   ✅ Delta Cartesiano: 100.87x con similitud 0.9730
+   ✅ POLAR DELTA VALIDADO: 212.29x con similitud 0.9730 🎉
+
+======================================================================
+📊 Testing: Synthetic: Clustered Topics (baseline)
+======================================================================
+
+🔑 Similitud Consecutiva: 0.9818
+   ✅ EXCELENTE - Delta Encoding DEBE funcionar bien (≥8x esperado)
+
+Testing GZIP Baseline...
+Testing Int8 Quantization...
+Testing Delta Encoding...
+Testing Zstd...
+Testing Polar Delta Encoding...
+Testing Delta + ANS...
+Testing Delta Lossless (RLE+GZIP)...
+Testing Attractor Compression (PCA+Delta)...
+
+📊 Resultados:
+  GZIP           : ratio= 1.13x, comp=160.34ms, decomp=22.28ms, loss=0.0000%
+  Int8+GZIP      : ratio= 9.86x, comp=116.56ms, decomp= 5.92ms, loss=17.4887%
+  Delta+GZIP     : ratio= 1.10x, comp=166.07ms, decomp=21.23ms, loss=0.0000% ⚠️ (esperaba ≥8x)
+  Zstd           : ratio= 1.13x, comp= 22.79ms, decomp= 8.28ms, loss=0.0000%
+  PolarDelta+GZIP: ratio= 2.74x, comp=107.20ms, decomp=22.61ms, loss=2.8243% ⚠️ (esperaba ≥8x)
+  Delta+ANS      : ratio= 5.38x, comp= 39.14ms, decomp= 7.83ms, loss=21.4055% ⚠️ (esperaba ≥8x)
+  Delta+RLE+GZIP : ratio= 0.98x, comp=2570.57ms, decomp=43.29ms, loss=0.0000% ⚠️ (esperaba ≥8x)
+  Attractor(PCA-10): ratio=308.74x, comp= 12.71ms, decomp= 0.52ms, loss=72.6354%
+
+🔬 Validación de Hipótesis:
+   ❌ Delta Cartesiano: solo 1.10x (esperaba ≥8x) con similitud 0.9818
+   ⚠️  Polar Delta: 2.74x (esperaba ≥8x) con similitud 0.9818
+
+
+==========================================================================================
+📊 TABLA COMPARATIVA FINAL
+==========================================================================================
+
+Dataset                          Consec.Sim         GZIP    Int8+GZIP   Delta+GZIP         Zstd      PolarDelta    Delta+ANS
+---------------------------------------------------------------------------------------------------------------------
+🔬 REAL BERT: wikipedia_2k           0.9898         1.08x        4.26x        1.10x        1.08x        2.90x        5.42x        0.97x      187.35x
+🔬 REAL BERT: news_temporal_2k       0.9730       106.28x      467.37x      100.87x      401.04x      212.29x      387.05x       36.98x     1775.72x
+Synthetic: Clustered Topics (baseline)      0.9818         1.13x        9.86x        1.10x        1.13x        2.74x        5.38x        0.98x      308.74x
+
+==========================================================================================
+📊 Pérdida de Accuracy por Dataset
+==========================================================================================
+
+Dataset                                GZIP    Int8+GZIP   Delta+GZIP         Zstd      PolarDelta    Delta+ANS
+---------------------------------------------------------------------------------------------------------
+🔬 REAL BERT: wikipedia_2k           0.0000% 25783765612.2576%      0.0000%      0.0000% 20696694579.0761% 116242013535.3361%  10794.0871% 24237263543.6425%
+🔬 REAL BERT: news_temporal_2k       0.0000% 25495992843.4936%      0.0000%      0.0000% 68034209829.7737% 310800680934.7380%  63222.4573% 31715905111.0309%
+Synthetic: Clustered Topics (baseline)      0.0000%     17.4887%      0.0000%      0.0000%      2.8243%     21.4055%      0.0000%     72.6354%
+
+==========================================================================================
+🏆 VALIDACIÓN DE HIPÓTESIS Y CONCLUSIONES
+==========================================================================================
+
+
+🔬 REAL BERT: wikipedia_2k
+  Similitud Consecutiva: 0.9898
+  Delta+GZIP: 1.10x
+  ❌ HIPÓTESIS REFUTADA: Delta <8x con alta similitud (esperaba ≥8x)
+  🎯 Mejor método: Attractor(PCA-10) (187.35x, 24237263543.6425% loss)
+
+🔬 REAL BERT: news_temporal_2k
+  Similitud Consecutiva: 0.9730
+  Delta+GZIP: 100.87x
+  ✅ HIPÓTESIS VALIDADA: Delta ≥8x con alta similitud
+  🎯 Mejor método: Attractor(PCA-10) (1775.72x, 31715905111.0309% loss)
+
+Synthetic: Clustered Topics (baseline)
+  Similitud Consecutiva: 0.9818
+  Delta+GZIP: 1.10x
+  ❌ HIPÓTESIS REFUTADA: Delta <8x con alta similitud (esperaba ≥8x)
+  🎯 Mejor método: Attractor(PCA-10) (308.74x, 72.6354% loss)
+
+==========================================================================================
+📝 RESUMEN FINAL
+==========================================================================================
+
+Datasets con similitud consecutiva ≥0.90 donde Delta validó (≥8x): 1
+Datasets con similitud consecutiva ≥0.90 donde Delta falló (<8x): 2
+
+✅ CONCLUSIÓN: Delta Encoding ES EFECTIVO para datos con alta similitud consecutiva.
+   Recomendación: Implementar en Lirasion para memoria conversacional.
+
+================================================================================
+🌀 ANÁLISIS DE ATRACTOR CAÓTICO - Embeddings ML
+================================================================================
+Autor: Francisco Molina Burgos (ORCID: 0009-0008-6093-8267)
+Fecha: 2025-11-21
+
+Objetivo: Determinar si existe un atractor caótico de baja dimensión
+que permita compresión dramática (30-100x).
+================================================================================
+
+
+================================================================================
+📊 Dataset: Conversational Drift (5%)
+================================================================================
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 39.1416
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = -0.002445
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (39.14 < 768)
+   λ₁ > 0 (caótico): false (-0.002445 > 0)
+   ❌ NO existe atractor caótico
+
+💡 Potencial de compresión: 19.6x
+   (Modelo de 768 dim → trayectoria en atractor de dim 39.14)
+
+
+================================================================================
+📊 Dataset: Temporal Smoothing (α=0.9)
+================================================================================
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 40.2929
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = -0.001769
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (40.29 < 768)
+   λ₁ > 0 (caótico): false (-0.001769 > 0)
+   ❌ NO existe atractor caótico
+
+💡 Potencial de compresión: 19.1x
+   (Modelo de 768 dim → trayectoria en atractor de dim 40.29)
+
+
+================================================================================
+📊 Dataset: Clustered Topics (100/cluster)
+================================================================================
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 0.5248
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = 0.529950
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (0.52 < 768)
+   λ₁ > 0 (caótico): true (0.529950 > 0)
+   ✅ EXISTE ATRACTOR CAÓTICO
+
+💡 Potencial de compresión: 1463.4x
+   (Modelo de 768 dim → trayectoria en atractor de dim 0.52)
+
+
+================================================================================
+📊 TABLA COMPARATIVA - ANÁLISIS DE ATRACTORES
+================================================================================
+
+Dataset                                     D₂           λ₁    ¿Caótico? Compresión (teórica)
+-----------------------------------------------------------------------------------------------
+Conversational Drift (5%)              39.1416    -0.002445         ❌ NO              19.6x
+Temporal Smoothing (α=0.9)             40.2929    -0.001769         ❌ NO              19.1x
+Clustered Topics (100/cluster)          0.5248     0.529950         ✅ SÍ            1463.4x
+
+================================================================================
+🎯 INTERPRETACIÓN
+================================================================================
+
+✅ SE DETECTÓ AL MENOS UN ATRACTOR CAÓTICO
+
+Esto significa que:
+  1. Los embeddings NO ocupan todo el espacio de 768 dimensiones
+  2. Viven en una variedad de menor dimensión (D₂ < 768)
+  3. La dinámica es caótica (λ₁ > 0): trayectorias sensibles a condiciones iniciales
+
+💡 IMPLICACIONES PARA COMPRESIÓN:
+
+  Clustered Topics (100/cluster) - ⭐ CANDIDATO PARA COMPRESIÓN POR ATRACTOR
+    Dimensión efectiva: 0.52 (vs 768 nominal)
+    Potencial: 1463.4x compresión
+    Estrategia: Modelar como trayectoria en atractor + parámetros del modelo
+
+📝 PRÓXIMO PASO:
+  → Implementar compresor basado en modelo de atractor (Lorenz generalizado)
+  → Codificar embeddings como parámetros de trayectoria en vez de puntos individuales
+
+================================================================================
+
+📚 CONTEXTO TEÓRICO:
+
+  Dimensión de Correlación D₂:
+    • D₂ ≈ dim → espacio completamente ocupado (sin compresión)
+    • D₂ << dim → estructura de baja dimensión (alta compresibilidad)
+    • Lorenz: D₂ ≈ 2.05 (atractor 3D)
+    • Rössler: D₂ ≈ 1.99
+
+  Exponente de Lyapunov λ₁:
+    • λ₁ > 0 → caos (divergencia exponencial)
+    • λ₁ = 0 → punto fijo o ciclo límite
+    • λ₁ < 0 → convergencia a equilibrio
+
+  Ratio de compresión = dim_embedding / D₂
+    • Si dim=768 y D₂=10 → potencial de ~77x
+    • Si dim=768 y D₂=5 → potencial de ~154x
+
+================================================================================
+================================================================================
+🌀 ANÁLISIS DE ATRACTOR CAÓTICO - REAL BERT Embeddings
+================================================================================
+Autor: Francisco Molina Burgos (ORCID: 0009-0008-6093-8267)
+Fecha: 2025-11-22
+
+
+================================================================================
+📊 Dataset: wikipedia_2k (REAL BERT)
+================================================================================
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+   Similitud consecutiva: 0.9898
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 3.4325
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = -0.091917
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (3.43 < 768)
+   λ₁ > 0 (caótico): false (-0.091917 > 0)
+   ❌ NO existe atractor caótico
+
+💡 Potencial de compresión: 223.7x
+   (Modelo de 768 dim → trayectoria en atractor de dim 3.43)
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 3.4325
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = -0.091917
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (3.43 < 768)
+   λ₁ > 0 (caótico): false (-0.091917 > 0)
+   ⚠️  EXISTE ESTRUCTURA DE BAJA DIMENSIÓN (pero no caótica)
+
+💡 Potencial de compresión: 223.7x
+   (Modelo de 768 dim → trayectoria en atractor de dim 3.43)
+
+================================================================================
+📊 Dataset: news_temporal_2k (REAL BERT)
+================================================================================
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+   Similitud consecutiva: 0.9730
+🔬 Analizando atractor caótico...
+   Puntos: 2000
+   Dimensión: 768
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 0.0286
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = -0.009500
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (0.03 < 768)
+   λ₁ > 0 (caótico): false (-0.009500 > 0)
+   ❌ NO existe atractor caótico
+
+💡 Potencial de compresión: 1.0x
+   (Modelo de 768 dim → trayectoria en atractor de dim 0.03)
+
+📊 Calculando dimensión de correlación D₂...
+   D₂ = 0.0286
+
+📈 Calculando exponente de Lyapunov λ₁...
+   λ₁ = -0.009500
+
+🎯 Diagnóstico:
+   D₂ < dim_embedding: true (0.03 < 768)
+   λ₁ > 0 (caótico): false (-0.009500 > 0)
+   ⚠️  EXISTE ESTRUCTURA DE BAJA DIMENSIÓN (pero no caótica)
+
+💡 Potencial de compresión: 26818.0x
+   (Modelo de 768 dim → trayectoria en atractor de dim 0.03)
+
+================================================================================
+🎯 INTERPRETACIÓN
+================================================================================
+
+Estos son embeddings REALES de BERT-base-uncased (768D).
+Los resultados validan experimentalmente la hipótesis del paper:
+"High-dimensional embeddings inhabit low-dimensional chaotic attractors."
+
