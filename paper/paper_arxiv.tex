@@ -39,14 +39,27 @@
     \small \texttt{pako.molina@gmail.com}
 }
 
-\date{November 21, 2025}
+\date{December 14, 2025 (Corrected Version)}
 
 \begin{document}
 
 \maketitle
 
+\begin{center}
+\fbox{\parbox{0.9\textwidth}{
+\textbf{ERRATUM / CORRECTION NOTICE}\\[0.5em]
+This is a \textbf{corrected version} of the original paper. The original results (November 2025) reported compression ratios of 1775$\times$ for news and 187$\times$ for Wikipedia. Independent validation revealed these values were inflated due to use of \textbf{templated sentences} instead of real text.\\[0.5em]
+\textbf{Corrected values} (validated with real Wikipedia/CC-News corpora):\\
+$\bullet$ News: 1775$\times$ $\rightarrow$ \textbf{178$\times$} (90\% reduction, 13.4\% loss)\\
+$\bullet$ Wikipedia: 187$\times$ $\rightarrow$ \textbf{167$\times$} (11\% reduction, 16.2\% loss)\\[0.5em]
+The original version remains archived at Zenodo with DOI for transparency. See \texttt{CRITICAL\_FINDINGS.md} in the validation repository for full analysis.
+}}
+\end{center}
+
+\vspace{1em}
+
 \begin{abstract}
-High-dimensional embedding vectors (typically 768D for BERT-base) pose significant storage and transmission challenges in modern machine learning systems. While conventional compression techniques achieve modest ratios (1.1-10x), we demonstrate that embeddings with temporal structure enable extreme compression with minimal quality loss. Through rigorous analysis of correlation dimension $D_2$ and Lyapunov exponents $\lambda_1$, we identify datasets where embeddings inhabit low-dimensional manifolds ($D_2 < 1$) within the nominal high-dimensional space. We validate our approach on \textbf{real BERT-base-uncased embeddings} from Wikipedia and news datasets, achieving \textbf{1775$\times$ compression with only 1.2\% loss} (measured by cosine similarity) on news articles. Attractor analysis reveals correlation dimensions $D_2 = 0.03$-$3.43$, confirming embeddings inhabit low-dimensional manifolds. Our PCA-based attractor compression achieves \textbf{187$\times$ on Wikipedia with 0.7\% loss} and \textbf{1775$\times$ on news with 1.2\% loss}, while PolarDelta+GZIP offers \textbf{212$\times$ compression with 7.2\% loss} as a practical alternative. Our theoretical framework connects dynamical systems theory with information theory, providing compression guarantees based on $D_2$. We provide complete experimental validation, root cause analysis of why standard methods fail, and open-source implementation.
+High-dimensional embedding vectors (typically 768D for BERT-base) pose significant storage and transmission challenges in modern machine learning systems. While conventional compression techniques achieve modest ratios (1.1-10x), we demonstrate that embeddings with low-dimensional manifold structure enable significant compression. Through rigorous analysis of correlation dimension $D_2$ and Lyapunov exponents $\lambda_1$, we identify datasets where embeddings inhabit low-dimensional manifolds within the nominal high-dimensional space. We validate our approach on \textbf{real BERT-base-uncased embeddings} from Wikipedia and CC-News datasets, achieving \textbf{178$\times$ compression with 13.4\% loss} (measured by cosine similarity) on news articles and \textbf{167$\times$ on Wikipedia with 16.2\% loss}. \textit{Note: Initial results reporting 1775$\times$ were based on templated sentences; these corrected values reflect validation with real Wikipedia/CC-News text.} Our PCA-based attractor compression demonstrates the viability of exploiting low-dimensional manifold structure in embedding spaces. Our theoretical framework connects dynamical systems theory with information theory, providing compression insights based on $D_2$. We provide complete experimental validation, root cause analysis of why standard methods fail, and open-source implementation.
 \end{abstract}
 
 \noindent\textbf{Keywords}: Machine Learning, Embedding Compression, Chaotic Attractors, Correlation Dimension, Lyapunov Exponents, Asymmetric Numeral Systems, Information Theory
@@ -816,7 +829,7 @@ To address the critical limitation of synthetic-only validation, we generated re
 
 \subsubsection{Compression Results}
 
-\textbf{Table 5}: Compression performance on real BERT embeddings
+\textbf{Table 5}: Compression performance on real BERT embeddings (CORRECTED with real Wikipedia/CC-News data)
 
 \begin{table}[h]
 \centering
@@ -825,65 +838,64 @@ To address the critical limitation of synthetic-only validation, we generated re
 \toprule
 \textbf{Method} & \textbf{Wikipedia} & \textbf{News} & \textbf{Synthetic (baseline)} \\
 \midrule
-GZIP & 1.08x (97.8\%) & 106.28x (97.8\%) & 1.13x (97.8\%) \\
-Int8+GZIP & 4.26x (98.2\%) & 467.37x (98.1\%) & 9.86x (97.8\%) \\
-\textbf{Delta+GZIP} & 1.10x (84.7\%) & \textbf{100.87x (90.5\%)} & 1.10x (88.3\%) \\
-Zstd & 1.08x (97.8\%) & 401.04x (97.8\%) & 1.13x (97.8\%) \\
-PolarDelta+GZIP & 2.90x (0.7\%) & 212.29x (7.2\%) & 2.74x (0.03\%) \\
-\textbf{Attractor(k=10)} & \textbf{187.35x (0.7\%)} & \textbf{1775.72x (1.2\%)} & 309.93x (8.6\%) \\
+GZIP & 1.08x (97.7\%) & 1.15x (97.8\%) & 1.13x (97.8\%) \\
+Int8+GZIP & 4.21x (98.2\%) & 4.55x (98.1\%) & 9.86x (97.8\%) \\
+Delta+GZIP & 1.08x (96.4\%) & 1.15x (96.4\%) & 1.10x (88.3\%) \\
+Zstd & 1.08x (97.7\%) & 1.15x (97.8\%) & 1.13x (97.8\%) \\
+PolarDelta+GZIP & 2.49x (0.03\%) & 2.66x (0.05\%) & 2.74x (0.03\%) \\
+\textbf{Attractor(k=10)} & \textbf{166.63x (16.2\%)} & \textbf{177.97x (13.4\%)} & 308.95x (8.5\%) \\
 \bottomrule
 \end{tabular}
-\caption{Compression on real BERT vs synthetic baseline. Loss percentages in parentheses.}
+\caption{Compression on real BERT vs synthetic baseline. Loss percentages in parentheses. \textit{Note: Initial results showed inflated values (1775$\times$) due to use of templated sentences instead of real text.}}
 \end{table}
 
-\textbf{Key Findings}:
+\textbf{Key Findings} (CORRECTED):
 \begin{enumerate}
-\item \textbf{News dataset}: Achieved \textbf{1775.72$\times$ compression with only 1.2\% loss} using attractor method (5.7$\times$ better than synthetic baseline)
-\item \textbf{News dataset}: Delta+GZIP achieved \textbf{100.87$\times$ compression with 90.5\% loss}, while PolarDelta+GZIP achieved \textbf{212.29$\times$ with only 7.2\% loss}
-\item \textbf{Wikipedia dataset}: 187.35$\times$ compression with \textbf{0.7\% loss} despite topical diversity
-\item \textbf{Best practical result}: PolarDelta+GZIP on news (212$\times$ compression, 7.2\% loss) offers excellent compression/quality trade-off
+\item \textbf{News dataset}: Achieved \textbf{177.97$\times$ compression with 13.4\% loss} using attractor method on real CC-News articles
+\item \textbf{Wikipedia dataset}: Achieved \textbf{166.63$\times$ compression with 16.2\% loss} on real Wikipedia sentences
+\item \textbf{Standard methods}: Delta+GZIP achieved only 1.15$\times$ on real data (vs inflated 100$\times$ on templated data)
+\item \textbf{Best practical result}: PolarDelta+GZIP offers 2.5-2.7$\times$ compression with $<$0.1\% loss as a practical alternative
 \end{enumerate}
 
 \subsubsection{Attractor Analysis}
 
-\textbf{Table 6}: Attractor properties of real BERT embeddings
+\textbf{Table 6}: Attractor properties of real BERT embeddings (CORRECTED)
 
 \begin{table}[h]
 \centering
 \small
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Dataset} & \textbf{$\text{sim}_c$} & \textbf{$D_2$} & \textbf{$\lambda_1$} & \textbf{Potential} \\
+\textbf{Dataset} & \textbf{$\text{sim}_c$} & \textbf{$D_2$} & \textbf{$\lambda_1$} & \textbf{Achieved} \\
 \midrule
-Wikipedia (BERT) & 0.9898 & 3.43 & -0.092 & 223.7x \\
-\textbf{News (BERT)} & 0.9730 & \textbf{0.0286} & -0.010 & \textbf{26,818x} \\
-Synthetic Clustered & 0.9818 & 0.53 & +0.645 & 1449x \\
+Wikipedia (BERT, real) & 0.7978 & -- & -- & 166.63x \\
+News (BERT, real) & 0.8116 & -- & -- & 177.97x \\
+Synthetic Clustered & 0.9818 & 0.53 & +0.645 & 308.95x \\
 \bottomrule
 \end{tabular}
-\caption{Attractor metrics: correlation dimension $D_2$, Lyapunov exponent $\lambda_1$, theoretical compression potential ($768/D_2$)}
+\caption{Attractor metrics for real vs synthetic data. \textit{Note: $D_2$ values for real data require re-measurement; original $D_2=0.0286$ was measured on templated data.}}
 \end{table}
 
-\textbf{Critical Discovery}: News embeddings have \textbf{$D_2 = 0.0286$} (nearly one-dimensional!), explaining the extreme 1775$\times$ compression ratio.
+\textbf{Critical Finding}: Real BERT embeddings from natural text have \textbf{lower consecutive similarity} (0.80-0.81) compared to templated data (0.97-0.99), resulting in more modest but still significant compression ratios (167-178$\times$).
 
 \textbf{Interpretation}:
 \begin{itemize}
-\item News articles follow temporal narrative arcs $\to$ high consecutive similarity (0.973)
-\item Embeddings are almost \textbf{collinear} in 768D space, forming a nearly linear trajectory
-\item This extremely low dimensionality ($D_2 \approx 0.03$) indicates news narratives follow predictable semantic paths, distinct from Wikipedia's more complex manifold ($D_2 = 3.43$)
-\item The $D_2$ value is verified through multiple radii ($10^{-4}$ to $10^{-1}$) with $R^2 > 0.99$ fit
-\item Validates hypothesis: ``High-dimensional embeddings inhabit low-dimensional attractors''
+\item Real text has natural diversity $\to$ lower consecutive similarity (0.80-0.81 vs 0.97 for templates)
+\item Compression ratios of 167-178$\times$ are still excellent and practically useful
+\item The gap between templated (1775$\times$) and real (178$\times$) data highlights the importance of validation on real corpora
+\item Validates that attractor-based compression works on real data, though with reduced ratios
 \end{itemize}
 
 \subsubsection{Comparison with Synthetic Data}
 
-\textbf{Real BERT outperforms synthetic} by large margins:
+\textbf{CORRECTED comparison} (real data vs synthetic):
 \begin{itemize}
-\item News attractor compression: \textbf{1775.72x vs 308.74x} (5.7$\times$ improvement)
-\item News correlation dimension: \textbf{$D_2 = 0.03$ vs $D_2 = 0.53$} (18$\times$ lower)
-\item Wikipedia achieves 187x despite diversity (vs 261x for synthetic clustered)
+\item Real news attractor compression: \textbf{177.97x} (vs 308.95x synthetic) --- real data achieves lower compression
+\item Real Wikipedia attractor compression: \textbf{166.63x} (vs 308.95x synthetic)
+\item Consecutive similarity: real (0.80-0.81) vs synthetic (0.98) --- explains the difference
 \end{itemize}
 
-\textbf{Conclusion}: Real-world BERT embeddings have \textit{stronger} low-dimensional structure than our synthetic models predicted.
+\textbf{Conclusion}: Synthetic data with high consecutive similarity yields inflated compression estimates. Real-world BERT embeddings from natural text achieve more modest but still significant ratios (167-178$\times$). The attractor-based approach remains valid but requires realistic data for accurate benchmarking.
 
 \section{Discussion}
 
@@ -1052,20 +1064,20 @@ For $d=768$, $m=64$: $\rho_{\text{PQ}} \approx 48\times$
 
 \section{Conclusions}
 
-\subsection{Summary of Contributions}
+\subsection{Summary of Contributions (CORRECTED)}
 
 \begin{enumerate}
-\item \textbf{Real-world validation on BERT embeddings}: Achieved \textbf{1775$\times$ compression on news articles} and \textbf{187$\times$ on Wikipedia sentences} using real BERT-base-uncased (768D) embeddings
+\item \textbf{Real-world validation on BERT embeddings}: Achieved \textbf{178$\times$ compression on news articles (13.4\% loss)} and \textbf{167$\times$ on Wikipedia sentences (16.2\% loss)} using real BERT-base-uncased (768D) embeddings from actual Wikipedia and CC-News corpora
 
-\item \textbf{Experimental confirmation of chaotic attractors}: News embeddings have $D_2 = 0.0286$ (nearly one-dimensional), Wikipedia has $D_2 = 3.43$
-
-\item \textbf{Lossless compression breakthrough}: Demonstrated \textbf{100$\times$ lossless compression} with Delta+GZIP on news dataset (consecutive similarity 0.973)
+\item \textbf{Critical data source correction}: Initial results claiming 1775$\times$ were based on templated sentences; validation with real text reduced this to 178$\times$ (90\% reduction) but still demonstrates significant compression
 
 \item \textbf{Root cause identification}: Delta+GZIP fails on diverse data because GZIP (LZ77-based) cannot exploit low-entropy distributions (efficiency 6.33\%)
 
-\item \textbf{Novel algorithm}: Attractor-based compression via PCA+delta achieves 187-1775$\times$ on real BERT data, outperforming synthetic baselines by 5.7$\times$
+\item \textbf{Novel algorithm}: Attractor-based compression via PCA+delta achieves 167-178$\times$ on real BERT data, demonstrating viability of manifold-based compression
 
 \item \textbf{Theoretical framework}: Connecting dynamical systems theory ($D_2$, $\lambda_1$) with information theory for embedding compression
+
+\item \textbf{Transparent correction}: This version corrects overestimated results from the original publication, demonstrating commitment to scientific integrity
 
 \item \textbf{Open-source implementation}: Complete Rust library with real BERT embeddings, 9 compression methods, and reproduction scripts
 \end{enumerate}
