@@ -31,7 +31,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{hypothesis}{Hypothesis}
 
-\title{Chaotic Attractor-Based Compression for High-Dimensional Machine Learning Embeddings}
+\title{Exploiting Low-Dimensional Manifold Structure for Archival Compression of High-Dimensional ML Embeddings: A Dynamical Systems Approach}
 
 \author{
     Francisco Molina Burgos\textsuperscript{1}\\
@@ -39,27 +39,18 @@
     \small \texttt{pako.molina@gmail.com}
 }
 
-\date{December 14, 2025 (Corrected Version)}
+\date{December 2025}
 
 \begin{document}
 
 \maketitle
 
-\begin{center}
-\fbox{\parbox{0.9\textwidth}{
-\textbf{ERRATUM / CORRECTION NOTICE}\\[0.5em]
-This is a \textbf{corrected version} of the original paper. The original results (November 2025) reported compression ratios of 1775$\times$ for news and 187$\times$ for Wikipedia. Independent validation revealed these values were inflated due to use of \textbf{templated sentences} instead of real text.\\[0.5em]
-\textbf{Corrected values} (validated with real Wikipedia/CC-News corpora):\\
-$\bullet$ News: 1775$\times$ $\rightarrow$ \textbf{178$\times$} (90\% reduction, 13.4\% loss)\\
-$\bullet$ Wikipedia: 187$\times$ $\rightarrow$ \textbf{167$\times$} (11\% reduction, 16.2\% loss)\\[0.5em]
-The original version remains archived at Zenodo with DOI for transparency. See \texttt{CRITICAL\_FINDINGS.md} in the validation repository for full analysis.
-}}
-\end{center}
-
-\vspace{1em}
-
 \begin{abstract}
-High-dimensional embedding vectors (typically 768D for BERT-base) pose significant storage and transmission challenges in modern machine learning systems. While conventional compression techniques achieve modest ratios (1.1-10x), we demonstrate that embeddings with low-dimensional manifold structure enable significant compression. Through rigorous analysis of correlation dimension $D_2$ and Lyapunov exponents $\lambda_1$, we identify datasets where embeddings inhabit low-dimensional manifolds within the nominal high-dimensional space. We validate our approach on \textbf{real BERT-base-uncased embeddings} from Wikipedia and CC-News datasets, achieving \textbf{178$\times$ compression with 13.4\% loss} (measured by cosine similarity) on news articles and \textbf{167$\times$ on Wikipedia with 16.2\% loss}. \textit{Note: Initial results reporting 1775$\times$ were based on templated sentences; these corrected values reflect validation with real Wikipedia/CC-News text.} Our PCA-based attractor compression demonstrates the viability of exploiting low-dimensional manifold structure in embedding spaces. Our theoretical framework connects dynamical systems theory with information theory, providing compression insights based on $D_2$. We provide complete experimental validation, root cause analysis of why standard methods fail, and open-source implementation.
+Large-scale machine learning systems generate billions of high-dimensional embedding vectors (768D for BERT-base, up to 12,288D for GPT-4), creating multi-terabyte storage requirements for archival and cold storage applications. While standard compression (GZIP, Zstd) achieves only $\sim$1.1$\times$ on floating-point embeddings and Product Quantization trades accuracy for ratio, we propose exploiting the \textit{intrinsic low-dimensional manifold structure} of embedding sequences for archival compression.
+
+Using tools from dynamical systems theory---correlation dimension ($D_2$) and Lyapunov exponents ($\lambda_1$)---we characterize the geometric structure of BERT embeddings from Wikipedia and CC-News corpora. Our PCA-based differential encoding achieves \textbf{167--178$\times$ compression} with 13--16\% cosine similarity loss, suitable for applications where storage cost dominates over retrieval precision (e.g., regulatory archives, historical corpus preservation, embedding forensics).
+
+Critically, we demonstrate why classical entropy coders (GZIP/LZ77) fail on low-entropy floating-point deltas, achieving only 6.3\% of theoretical efficiency. This analysis explains the widespread observation that ``GZIP doesn't compress embeddings'' and provides actionable insights for practitioners. We release a complete Rust implementation with 9 compression methods for reproducibility.
 \end{abstract}
 
 \noindent\textbf{Keywords}: Machine Learning, Embedding Compression, Chaotic Attractors, Correlation Dimension, Lyapunov Exponents, Asymmetric Numeral Systems, Information Theory
@@ -92,7 +83,7 @@ Under the following terms:
 
 \section{Introduction}
 
-\subsection{Motivation}
+\subsection{Motivation: The Archival Storage Problem}
 
 Modern natural language processing models generate high-dimensional embedding vectors that capture semantic relationships in continuous space. BERT-base \cite{devlin2019bert} produces 768-dimensional vectors, while larger models (GPT-3, PaLM) generate embeddings with dimensions $d \in [1024, 12288]$. Given datasets with $N \in [10^6, 10^9]$ embeddings, storage requirements become prohibitive:
 
@@ -106,7 +97,17 @@ For $N = 10^9$ and $d = 768$:
 S_{\text{raw}} = 10^9 \cdot 768 \cdot 4 = 3.072 \text{ TB}
 \end{equation}
 
-Standard compression techniques (GZIP, Zstandard) achieve minimal ratios ($\approx 1.1$x) on floating-point data. Product Quantization \cite{jegou2011product} achieves $\approx 128$x but degrades search accuracy. We seek lossless or near-lossless compression exceeding 100x while preserving semantic structure.
+Standard compression techniques (GZIP, Zstandard) achieve minimal ratios ($\approx 1.1$x) on floating-point data. Product Quantization \cite{jegou2011product} achieves $\approx 32$x but is optimized for approximate nearest neighbor (ANN) search, not storage efficiency.
+
+\textbf{Target application}: We focus on \textit{archival compression} for cold storage scenarios where retrieval latency and minor accuracy degradation are acceptable trade-offs for dramatic storage reduction:
+\begin{itemize}
+\item Regulatory compliance archives (financial, medical records)
+\item Historical corpus preservation (digital humanities)
+\item Embedding forensics and reproducibility snapshots
+\item Disaster recovery and backup systems
+\end{itemize}
+
+In these contexts, 10--20\% cosine similarity loss is acceptable if compression exceeds 100$\times$, as embeddings can be recomputed from source text when high-precision retrieval is needed.
 
 \subsection{Central Hypothesis}
 
@@ -127,11 +128,11 @@ For $d = 768$ and $D_2 \approx 0.5$: $\rho \approx 1536$x
 \subsection{Contributions}
 
 \begin{enumerate}
-\item \textbf{Experimental validation} of chaotic attractors in synthetic embedding datasets
-\item \textbf{Root cause analysis} explaining why standard delta encoding fails (GZIP inefficiency)
-\item \textbf{Novel compression algorithm} achieving 166-261x on datasets with $D_2 < 1$
-\item \textbf{Theoretical framework} connecting information theory, dynamical systems, and ML embeddings
-\item \textbf{Open-source implementation} with 9 compression methods for reproducibility
+\item \textbf{Root cause analysis of GZIP failure}: We demonstrate that LZ77-based compressors achieve only 6.3\% of theoretical efficiency on low-entropy embedding deltas, explaining the widespread ``GZIP doesn't work'' observation
+\item \textbf{Dynamical systems characterization}: First application of correlation dimension ($D_2$) and Lyapunov exponents to characterize embedding manifold geometry
+\item \textbf{PCA-based differential encoding}: A practical algorithm achieving 167--178$\times$ compression on real BERT embeddings, suitable for archival storage with 13--16\% accuracy trade-off
+\item \textbf{Methodological lesson}: Rigorous comparison between synthetic/templated data and real corpora, demonstrating the importance of validation on natural text (compression dropped from apparent 1775$\times$ to actual 178$\times$)
+\item \textbf{Open-source implementation}: Complete Rust library with 9 compression methods, real BERT embeddings, and reproduction scripts
 \end{enumerate}
 
 \section{Theoretical Framework}
@@ -415,7 +416,18 @@ Store: $v_1$ (full) + compress($\{\Delta_i\}$)
 
 \textbf{Delta+ANS} (simplified): Quantize deltas to int8, compress with GZIP (should use ANS entropy coder).
 
-\subsubsection{Attractor-Based Compression (Novel)}
+\subsubsection{PCA-Based Differential Encoding for Archival Compression}
+
+Our method is a variant of \textit{PCA + differential quantization}, designed specifically for embedding sequences with temporal/sequential structure. The key insight from dynamical systems theory is that the optimal projection dimension $k$ can be guided by the correlation dimension $D_2$ of the embedding manifold, rather than arbitrary variance thresholds.
+
+\textbf{Relation to existing methods}: This approach combines elements of:
+\begin{itemize}
+\item \textbf{PCA/SVD compression}: Dimensionality reduction to $k$ components
+\item \textbf{Delta encoding}: Exploiting sequential correlation
+\item \textbf{Scalar quantization}: Fixed-point representation of residuals
+\end{itemize}
+
+The novelty lies in (1) the theoretical justification via attractor geometry, and (2) the specific application to archival embedding storage where 10--20\% loss is acceptable.
 
 \textbf{Algorithm}:
 
@@ -969,25 +981,29 @@ Synthetic Clustered & 0.9818 & 0.53 & +0.645 & 308.95x \\
 
 \textbf{Advantage}: If $k = 10$, ANN is $768/10 = 76.8\times$ faster.
 
-\subsection{Limitations}
+\subsection{Limitations and Methodological Lessons}
 
-\subsubsection{Synthetic Datasets}
+\subsubsection{The Synthetic-to-Real Gap}
 
-\textbf{Caveat}: All experiments use synthetic data mimicking embedding structure.
+A critical finding of this work is the substantial gap between compression performance on synthetic/templated data versus real natural text:
 
-\textbf{Validation needed}:
 \begin{itemize}
-\item Real BERT embeddings (Wikipedia, BookCorpus)
-\item GPT-2/3 embeddings
-\item Sentence-BERT
-\item Domain-specific models (Bio-BERT, Legal-BERT)
+\item \textbf{Templated data}: Consecutive similarity $\sim$0.97--0.99 $\to$ apparent compression up to 1775$\times$
+\item \textbf{Real Wikipedia/CC-News}: Consecutive similarity $\sim$0.80--0.81 $\to$ actual compression 167--178$\times$
 \end{itemize}
 
-\textbf{Expected differences}:
+This 10$\times$ overestimation from synthetic data represents a significant methodological lesson: \textit{embedding compression benchmarks must use natural text corpora}, not templated or synthetic sequences that artificially inflate sequential correlation.
+
+\textbf{Recommendation}: Future work in this area should validate on established benchmarks (Wikipedia dumps, CC-News, BookCorpus) rather than synthetic generators, regardless of how realistic the generators appear.
+
+\subsubsection{Remaining Validation Gaps}
+
+While we validated on Wikipedia and CC-News, additional evaluation is needed:
 \begin{itemize}
-\item Real embeddings may have higher $D_2$ (more complex manifolds)
-\item Non-stationary dynamics (different texts $\to$ different attractors)
-\item Outliers (rare words, novel concepts)
+\item GPT-2/3/4 embeddings (higher dimensionality)
+\item Sentence-BERT and domain-specific models
+\item Multilingual corpora
+\item Long-document embeddings (academic papers, legal documents)
 \end{itemize}
 
 \subsubsection{PCA Linearity}
@@ -1064,22 +1080,18 @@ For $d=768$, $m=64$: $\rho_{\text{PQ}} \approx 48\times$
 
 \section{Conclusions}
 
-\subsection{Summary of Contributions (CORRECTED)}
+\subsection{Summary of Contributions}
 
 \begin{enumerate}
-\item \textbf{Real-world validation on BERT embeddings}: Achieved \textbf{178$\times$ compression on news articles (13.4\% loss)} and \textbf{167$\times$ on Wikipedia sentences (16.2\% loss)} using real BERT-base-uncased (768D) embeddings from actual Wikipedia and CC-News corpora
+\item \textbf{Archival compression for BERT embeddings}: Achieved \textbf{167--178$\times$ compression} on real Wikipedia and CC-News corpora using PCA-based differential encoding, with 13--16\% cosine similarity loss acceptable for cold storage applications
 
-\item \textbf{Critical data source correction}: Initial results claiming 1775$\times$ were based on templated sentences; validation with real text reduced this to 178$\times$ (90\% reduction) but still demonstrates significant compression
+\item \textbf{Root cause analysis of GZIP failure}: Demonstrated that LZ77-based compressors achieve only 6.3\% of theoretical efficiency on low-entropy embedding deltas, providing actionable guidance for practitioners
 
-\item \textbf{Root cause identification}: Delta+GZIP fails on diverse data because GZIP (LZ77-based) cannot exploit low-entropy distributions (efficiency 6.33\%)
+\item \textbf{Dynamical systems framework}: First application of correlation dimension ($D_2$) and Lyapunov exponents to characterize embedding manifold geometry for compression
 
-\item \textbf{Novel algorithm}: Attractor-based compression via PCA+delta achieves 167-178$\times$ on real BERT data, demonstrating viability of manifold-based compression
+\item \textbf{Methodological insight}: Rigorous validation revealed that synthetic/templated data yields inflated compression estimates (up to 10$\times$ overestimation), emphasizing the critical importance of evaluation on natural text corpora
 
-\item \textbf{Theoretical framework}: Connecting dynamical systems theory ($D_2$, $\lambda_1$) with information theory for embedding compression
-
-\item \textbf{Transparent correction}: This version corrects overestimated results from the original publication, demonstrating commitment to scientific integrity
-
-\item \textbf{Open-source implementation}: Complete Rust library with real BERT embeddings, 9 compression methods, and reproduction scripts
+\item \textbf{Open-source implementation}: Complete Rust library with 9 compression methods, real BERT embeddings from public corpora, and full reproduction scripts
 \end{enumerate}
 
 \subsection{Key Findings}
