@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{graphicx}
+\graphicspath{{../figures/}}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{array}
@@ -479,6 +480,13 @@ Compress $\{\hat{\delta}_i\}$ with GZIP.
 
 \textbf{Decompression}: Reverse process, reconstruct in reduced space, embed back to $\mathbb{R}^d$.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{fig4_compression_pipeline.pdf}
+\caption{PCA + Differential Encoding compression pipeline. Input embeddings (768D) are centered, projected to $k$ dimensions via PCA, delta-encoded, quantized to int16, and entropy-coded. The key insight is that consecutive embeddings on low-dimensional manifolds produce small deltas.}
+\label{fig:pipeline}
+\end{figure}
+
 \textbf{Complexity}:
 \begin{itemize}
 \item Time: $O(Nd + Nk \log k + C(Nk))$ where $C$ is compression cost
@@ -740,6 +748,13 @@ Slope = $0.53 \pm 0.02$ ($R^2 = 0.998$)
 
 \textbf{Interpretation}: Embeddings live on an approximately \textbf{half-dimensional manifold} within $\mathbb{R}^{768}$.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{fig3_correlation_dimension.pdf}
+\caption{Left: Log-log plot of correlation integral $C(r)$ vs. radius $r$ for clustered topic embeddings. The linear scaling region yields $D_2 = 0.53 \pm 0.02$ ($R^2 = 0.998$). Right: Comparison of correlation dimension and compression ratio across datasets, showing the inverse relationship between $D_2$ and achievable compression.}
+\label{fig:correlation}
+\end{figure}
+
 \subsubsection{Lyapunov Spectrum}
 
 \textbf{Table 3}: Maximal Lyapunov exponents
@@ -774,6 +789,20 @@ Due to high dimensionality, we project to 3D using top-3 PCA components:
 \textbf{Clustered Topics}: Trajectory forms distinct loops around $K$ cluster centers, resembling a \textbf{multiscroll attractor}.
 
 \textbf{Conversational Drift}: Smooth trajectory without fractal structure ($D_2 \approx 39 \approx$ intrinsic dimension).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{fig1_lorenz_attractor.pdf}
+\caption{Lorenz attractor visualization illustrating the concept of strange attractors in phase space. Embedding trajectories exhibit similar geometric structure, with trajectories confined to a low-dimensional manifold despite the high-dimensional ambient space. Color indicates time evolution.}
+\label{fig:lorenz}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{fig2_pca_projection.pdf}
+\caption{Left: 3D PCA projection of simulated BERT embeddings showing semantic clustering. Different colors represent distinct topic clusters. Right: Density distribution in PC1-PC2 plane, revealing the concentration of embeddings on low-dimensional manifolds.}
+\label{fig:pca}
+\end{figure}
 
 \subsection{Attractor Compression Performance}
 
