@@ -3,7 +3,7 @@ message: "If you use this software or paper, please cite it as below."
 type: software
 title: "Chaotic Attractor-Based Compression for High-Dimensional Machine Learning Embeddings"
 version: 1.0.0
-doi: 10.5281/zenodo.17680988
+doi: 10.5281/zenodo.17932389
 date-released: "2025-11-21"
 url: "https://github.com/Yatrogenesis/PP25-CHAOTIC_ATTRACTOR_COMPRESSION"
 repository-code: "https://github.com/Yatrogenesis/PP25-CHAOTIC_ATTRACTOR_COMPRESSION"
