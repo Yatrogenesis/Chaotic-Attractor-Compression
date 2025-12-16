@@ -253,8 +253,8 @@ def create_correlation_dimension():
 # Figure 4: Compression Pipeline Diagram
 # =============================================================================
 def create_compression_pipeline():
-    fig, ax = plt.subplots(figsize=(14, 6))
-    ax.set_xlim(0, 14)
+    fig, ax = plt.subplots(figsize=(16, 6))
+    ax.set_xlim(0, 16)
     ax.set_ylim(0, 6)
     ax.axis('off')
 
